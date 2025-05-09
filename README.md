@@ -111,5 +111,5 @@ Architecture Diagram
 ## Get in Touch
 
 Author: [John Folorunso Kolapo] (https://www.linkedin.com/in/kolapo-folorunso)
-Email: [john@opsbydesign.ca](mailto:admin@opsbydesign.ca)
+Email: admin@opsbydesign.ca
 
