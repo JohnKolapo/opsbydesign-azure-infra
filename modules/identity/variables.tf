@@ -1,5 +1,5 @@
 variable "name" {
-  description = "Name of the App Service"
+  description = "Name of the user-assigned managed identity"
   type        = string
 }
 
@@ -13,15 +13,12 @@ variable "resource_group_name" {
   type        = string
 }
 
-variable "app_service_plan_id" {
-  description = "ID of the App Service Plan"
-  type        = string
-}
-
-variable "app_settings" {
-  description = "Application settings key-value pairs"
-  type        = map(string)
-  default     = {}
+variable "role_assignments" {
+  description = "Map of role assignments for the identity"
+  type = map(object({
+    scope = string
+    role  = string
+  }))
 }
 
 variable "tags" {

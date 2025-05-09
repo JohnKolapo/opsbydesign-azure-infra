@@ -1,12 +1,27 @@
-provider "azurerm" {
-  features {}
-
-  resource_provider_registrations = "all"
+pprovider "azurerm" {
+  features = {}
+  subscription_id = "3de791aa-2da8-4e3d-b7c7-0c284fb336cf"
 }
+
 
 resource "azurerm_resource_group" "dns" {
   name     = "rg-opsbydesign-dns"
   location = "Canada Central"
+}
+
+resource "azurerm_app_service_plan" "this" {
+  name                = "opsbydesign-plan"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  kind                = "Linux"
+  reserved            = true
+
+  sku {
+    tier = "Basic"
+    size = "B1"
+  }
+
+  tags = var.tags
 }
 
 resource "azurerm_dns_zone" "main" {
@@ -14,3 +29,89 @@ resource "azurerm_dns_zone" "main" {
   resource_group_name = azurerm_resource_group.dns.name
 }
 
+module "app_service" {
+  source              = "../../modules/app_service"
+  name                = "opsbydesign-app"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  app_service_plan_id = azurerm_app_service_plan.this.id  # Placeholder, see below
+  app_settings        = {
+    "APPINSIGHTS_INSTRUMENTATIONKEY" = module.app_insights.instrumentation_key
+  }
+  tags = var.tags
+}
+
+module "vnet" {
+  source              = "../../modules/vnet"
+  vnet_name           = "vnet-dev-opsbydesign"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  address_space       = ["10.0.0.0/16"]
+  tags                = var.tags
+
+  subnets = {
+    subnet-app = {
+      address_prefixes = ["10.0.1.0/24"]
+    },
+    subnet-db = {
+      address_prefixes = ["10.0.2.0/24"]
+    }
+  }
+
+  nsgs = {
+    nsg-app = {
+      security_rules = [
+        {
+          name                       = "Allow_HTTP"
+          priority                   = 100
+          direction                  = "Inbound"
+          access                     = "Allow"
+          protocol                   = "Tcp"
+          source_port_range          = "*"
+          destination_port_range     = "80"
+          source_address_prefix      = "*"
+          destination_address_prefix = "*"
+        }
+      ]
+    },
+    nsg-db = {
+      security_rules = [
+        {
+          name                       = "Allow_SQL"
+          priority                   = 200
+          direction                  = "Inbound"
+          access                     = "Allow"
+          protocol                   = "Tcp"
+          source_port_range          = "*"
+          destination_port_range     = "1433"
+          source_address_prefix      = "*"
+          destination_address_prefix = "*"
+        }
+      ]
+    }
+  }
+
+  nsg_associations = {
+    subnet-app = "nsg-app"
+    subnet-db  = "nsg-db"
+  }
+}
+
+module "identity" {
+  source              = "../../modules/identity"
+  name                = "opsbydesign-ci-identity"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  tags                = var.tags
+
+  role_assignments = {
+    keyvault-reader = {
+      scope = "/subscriptions/${var.subscription_id}/resourceGroups/${var.resource_group_name}/providers/Microsoft.KeyVault/vaults/opsbydesign-kv"
+      role  = "Key Vault Reader"
+    },
+    storage-contributor = {
+      scope = "/subscriptions/${var.subscription_id}/resourceGroups/${var.resource_group_name}/providers/Microsoft.Storage/storageAccounts/opsbydesignstate"
+      role  = "Storage Blob Data Contributor"
+    }
+  }
+}
