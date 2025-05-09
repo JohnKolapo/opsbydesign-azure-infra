@@ -44,19 +44,21 @@ This project also serves as a proof-of-concept for:
 
 ## Structure
 
+## Structure
 
+```text
 opsbydesign-azure-infra/
-├── .github/workflows/terraform.yml         # GitHub Actions CI logic
+├── .github/workflows/terraform.yml   # GitHub Actions CI logic
 ├── environments/
-│   ├── dev/                                # Main entrypoint for dev infra
-│   └── prod/                               # Ready for production fork
+│   ├── dev/                          # Main entrypoint for dev infra
+│   └── prod/                         # Ready for production fork
 ├── modules/
 │   ├── vnet/
 │   ├── storage_account/
 │   ├── dns_zone/
 │   └── app_service/
-└── README.md                               # This file
-```
+└── README.md                         # This file
+
 
 ---
 
