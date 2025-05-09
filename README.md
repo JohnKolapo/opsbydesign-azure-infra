@@ -84,6 +84,28 @@ opsbydesign-azure-infra/
 
 ---
 
+Full Azure Infrastructure Architecture
+
+This project sets up a full-stack Azure environment using Terraform and GitHub Actions (OIDC) — no secrets stored. The design spans core infrastructure, serverless compute, API management, databases, and AI tooling.
+
+- Features Deployed
+
+DNS Zones, Virtual Networks (VNets), Subnets, NSGs
+
+GitHub Actions with Azure OIDC
+
+Serverless compute (Azure Functions, Logic Apps)
+
+API Gateway with versioning and rate-limiting
+
+Databases: CosmosDB, PostgreSQL, Azure SQL
+
+Azure Cognitive Services + App Insights
+
+CI/CD pipeline, RBAC, and cost governance
+
+Architecture Diagram
+
 ## Get in Touch
 
 Author: [John Folorunso Kolapo] (https://www.linkedin.com/in/kolapo-folorunso)
