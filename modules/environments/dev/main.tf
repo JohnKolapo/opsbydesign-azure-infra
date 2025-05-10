@@ -29,18 +29,6 @@ resource "azurerm_dns_zone" "main" {
   resource_group_name = azurerm_resource_group.dns.name
 }
 
-module "app_service" {
-  source              = "../../modules/app_service"
-  name                = "opsbydesign-app"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  app_service_plan_id = azurerm_app_service_plan.this.id  # Placeholder, see below
-  app_settings        = {
-    "APPINSIGHTS_INSTRUMENTATIONKEY" = module.app_insights.instrumentation_key
-  }
-  tags = var.tags
-}
-
 module "vnet" {
   source              = "../../modules/vnet"
   vnet_name           = "vnet-dev-opsbydesign"
@@ -117,7 +105,7 @@ module "identity" {
 }
 
 module "nsg" {
-  source              = "../../modules/nsg"
+  source              = "C:\users\kkolapo\projects\opsbydesign-azure-infra\modules\modules\nsg"
   location            = var.location
   resource_group_name = var.resource_group_name
   tags                = var.tags
@@ -126,7 +114,7 @@ module "nsg" {
 }
 
 module "compute_vm" {
-  source                  = "../../modules/compute"
+  source                  = "C:\users\kkolapo\projects\opsbydesign-azure-infra\modules\modules\compute"
   name                    = "dev-winvm-01"
   location                = var.location
   resource_group_name     = var.resource_group_name
@@ -140,20 +128,18 @@ module "compute_vm" {
 }
 
 module "app_service" {
-  source                  = "../../modules/app_service"
+  source                  = "C:\users\kkolapo\projects\opsbydesign-azure-infra\modules\modules\app_service"
   name                    = "webapp-opsbydesign"
   location                = var.location
   resource_group_name     = var.resource_group_name
   sku_tier                = "Basic"
   sku_size                = "B1"
-  runtime                 = "NODE|18-lts" # Change to "DOTNETCORE|6.0" or "PYTHON|3.10" if needed
+  runtime                 = "NODE|18-lts"
   user_assigned_identity_id = module.identity.identity_id
-
   app_settings = {
     WEBSITE_RUN_FROM_PACKAGE = "1"
     ENVIRONMENT              = "dev"
   }
-
   tags = var.tags
 }
 
