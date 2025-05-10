@@ -1,6 +1,5 @@
 provider "azurerm" {
   features = {}
-  subscription_id = "3de791aa-2da8-4e3d-b7c7-0c284fb336cf"
 }
 
 
@@ -30,7 +29,7 @@ resource "azurerm_dns_zone" "main" {
 }
 
 module "vnet" {
-  source              = "../../modules/vnet"
+  source              = "../../../modules/vnet"
   vnet_name           = "vnet-dev-opsbydesign"
   location            = var.location
   resource_group_name = var.resource_group_name
@@ -40,10 +39,8 @@ module "vnet" {
   subnets = {
     subnet-app = {
       address_prefixes = ["10.0.1.0/24"]
-    },
-    subnet-db = {
-      address_prefixes = ["10.0.2.0/24"]
     }
+    subnet_id = module.vnet.subnet_ids["subnet-app"]
   }
 
   nsgs = {
@@ -79,6 +76,23 @@ module "vnet" {
     }
   }
 
+  resource "azurerm_network_security_rule" "this" {
+  for_each                    = { for rule in each.value : rule.name => rule }
+
+  name                        = each.value.name
+  priority                    = each.value.priority
+  direction                   = each.value.direction
+  access                      = each.value.access
+  protocol                    = each.value.protocol
+  source_port_range           = each.value.source_port_range
+  destination_port_range      = each.value.destination_port_range
+  source_address_prefix       = each.value.source_address_prefix
+  destination_address_prefix  = each.value.destination_address_prefix
+
+  network_security_group_name = azurerm_network_security_group.this[each.key].name
+  resource_group_name         = var.resource_group_name
+}
+
   nsg_associations = {
     subnet-app = "nsg-app"
     subnet-db  = "nsg-db"
@@ -86,7 +100,7 @@ module "vnet" {
 }
 
 module "identity" {
-  source              = "../../modules/identity"
+  source              = "../../..//modules/identity"
   name                = "opsbydesign-ci-identity"
   location            = var.location
   resource_group_name = var.resource_group_name
@@ -105,7 +119,7 @@ module "identity" {
 }
 
 module "nsg" {
-  source              = "../../modules/comnsg"
+  source              = "../../../modules/nsg"
   location            = var.location
   resource_group_name = var.resource_group_name
   tags                = var.tags
@@ -114,7 +128,7 @@ module "nsg" {
 }
 
 module "compute_vm" {
-  source                  = "../../modules/compute"
+  source                  = "../../../modules/compute"
   name                    = "dev-winvm-01"
   location                = var.location
   resource_group_name     = var.resource_group_name
@@ -128,7 +142,7 @@ module "compute_vm" {
 }
 
 module "app_service" {
-  source                  = "../../modules/app_service"
+  source                  = "../../../modules/app_service"
   name                    = "webapp-opsbydesign"
   location                = var.location
   resource_group_name     = var.resource_group_name

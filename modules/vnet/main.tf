@@ -48,24 +48,102 @@ resource "azurerm_subnet_network_security_group_association" "assoc" {
   network_security_group_id = azurerm_network_security_group.nsgs[each.value].id
 }
 
-module "vnet" {
-  source              = "../../modules/vnet"
-  vnet_name           = "vnet-dev-opsbydesign"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  address_space       = ["10.0.0.0/16"]
-  tags                = var.tags
+PS C:\users\kkolapo\projects\opsbydesign-azure-infra\modules\environments\dev> terraform init
 
-  subnets = {
-    subnet-app = {
-      address_prefixes = ["10.0.1.0/24"]
-    },
-    subnet-db = {
-      address_prefixes = ["10.0.2.0/24"]
-    }
-  }
+Initializing the backend...
+Initializing modules...
+- app_service in ..\..\..\modules\app_service
+- compute_vm in ..\..\..\modules\compute
+- identity in ..\..\..\modules\identity
+- nsg in ..\..\..\modules\nsg
+- vnet in ..\..\..\modules\vnet
+- vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+- vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet in ..\..\..\modules\vnet
+╷
+│ Error: Failed to remove local module cache
+│
+│ Terraform tried to remove
+│ .terraform\modules\vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet
+│ in order to reinstall this module, but encountered an error: CreateFile
+│ .terraform\modules\vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet.vnet:
+│ The filename, directory name, or volume label syntax is incorrect.
+╵
 
-  nsgs = {
+╷
+│ Error: Invalid block definition
+│
+│   on ..\..\..\modules\nsg\main.tf line 13, in resource "azurerm_network_security_rule" "this":
+│   13:   for rule in each.value : rule.name => rule
+│
+│ Either a quoted string block label or an opening brace ("{") is expected here.
+╵
+
+PS C:\users\kkolapo\projects\opsbydesign-azure-infra\modules\environments\dev> terraform validate
+╷
+│ Error: Invalid block definition
+│
+│   on ..\..\..\modules\nsg\main.tf line 13, in resource "azurerm_network_security_rule" "this":
+│   13:   for rule in each.value : rule.name => rule
+│
+│ Either a quoted string block label or an opening brace ("{") is expected here.
+╵
+╷
+│ Error: Module not installed
+│
+│   on ..\..\..\modules\vnet\main.tf line 51:
+│   51: module "vnet" {
+│
+│ This module is not yet installed. Run "terraform init" to install all modules required by this configuration.
+╵
+PS C:\users\kkolapo\projects\opsbydesign-azure-infra\modules\environments\dev>  nsgs = {
     nsg-app = {
       security_rules = [
         {

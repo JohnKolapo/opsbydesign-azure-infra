@@ -9,26 +9,24 @@ resource "azurerm_network_security_group" "this" {
 }
 
 resource "azurerm_network_security_rule" "this" {
-  for_each                    = { for k, v in var.nsgs : k => v.security_rules }
-  for rule in each.value : rule.name => rule
+  for_each = {
+    for nsg_name, nsg in var.nsgs :
+    for rule in nsg.security_rules :
+    "${nsg_name}-${rule.name}" => {
+      nsg_name  = nsg_name
+      rule_data = rule
+    }
+  }
 
-  name                        = rule.key
-  priority                    = rule.value.priority
-  direction                   = rule.value.direction
-  access                      = rule.value.access
-  protocol                    = rule.value.protocol
-  source_port_range           = rule.value.source_port_range
-  destination_port_range      = rule.value.destination_port_range
-  source_address_prefix       = rule.value.source_address_prefix
-  destination_address_prefix  = rule.value.destination_address_prefix
-
+  name                        = each.value.rule_data.name
+  priority                    = each.value.rule_data.priority
+  direction                   = each.value.rule_data.direction
+  access                      = each.value.rule_data.access
+  protocol                    = each.value.rule_data.protocol
+  source_port_range           = each.value.rule_data.source_port_range
+  destination_port_range      = each.value.rule_data.destination_port_range
+  source_address_prefix       = each.value.rule_data.source_address_prefix
+  destination_address_prefix  = each.value.rule_data.destination_address_prefix
   resource_group_name         = var.resource_group_name
-  network_security_group_name = azurerm_network_security_group.this[each.key].name
-}
-
-resource "azurerm_subnet_network_security_group_association" "this" {
-  for_each = var.nsg_associations
-
-  subnet_id                 = each.value
-  network_security_group_id = azurerm_network_security_group.this[each.key].id
+  network_security_group_name = each.value.nsg_name
 }
