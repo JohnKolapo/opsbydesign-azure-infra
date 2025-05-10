@@ -105,7 +105,7 @@ module "identity" {
 }
 
 module "nsg" {
-  source              = "C:\users\kkolapo\projects\opsbydesign-azure-infra\modules\nsg"
+  source              = "../../modules/comnsg"
   location            = var.location
   resource_group_name = var.resource_group_name
   tags                = var.tags
@@ -114,7 +114,7 @@ module "nsg" {
 }
 
 module "compute_vm" {
-  source                  = "C:\users\kkolapo\projects\opsbydesign-azure-infra\modules\compute"
+  source                  = "../../modules/compute"
   name                    = "dev-winvm-01"
   location                = var.location
   resource_group_name     = var.resource_group_name
@@ -128,7 +128,7 @@ module "compute_vm" {
 }
 
 module "app_service" {
-  source                  = "C:\users\kkolapo\projects\opsbydesign-azure-infra\modules\app_service"
+  source                  = "../../modules/app_service"
   name                    = "webapp-opsbydesign"
   location                = var.location
   resource_group_name     = var.resource_group_name
