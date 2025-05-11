@@ -1,5 +1,3 @@
-# modules/nsg/main.tf
-
 resource "azurerm_network_security_group" "this" {
   for_each            = var.nsgs
   name                = each.key
@@ -8,7 +6,7 @@ resource "azurerm_network_security_group" "this" {
   tags                = var.tags
 }
 
-# Flatten NSG + Rules for valid for_each usage
+# Flatten NSG + Rules
 locals {
   nsg_rules_flat = flatten([
     for nsg_name, nsg in var.nsgs : [
@@ -38,7 +36,6 @@ resource "azurerm_network_security_rule" "this" {
   destination_port_range      = each.value.rule_data.destination_port_range
   source_address_prefix       = each.value.rule_data.source_address_prefix
   destination_address_prefix  = each.value.rule_data.destination_address_prefix
-
   network_security_group_name = each.value.nsg_name
   resource_group_name         = var.resource_group_name
 }
