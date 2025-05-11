@@ -1,27 +1,22 @@
 provider "azurerm" {
-  features = {}
+  features {}
+  subscription_id = var.subscription_id
 }
-
 
 resource "azurerm_resource_group" "dns" {
   name     = "rg-opsbydesign-dns"
   location = "Canada Central"
 }
 
-resource "azurerm_app_service_plan" "this" {
+resource "azurerm_service_plan" "this" {
   name                = "opsbydesign-plan"
   location            = var.location
   resource_group_name = var.resource_group_name
-  kind                = "Linux"
-  reserved            = true
-
-  sku {
-    tier = "Basic"
-    size = "B1"
-  }
-
-  tags = var.tags
+  os_type             = "Linux"                      # REQUIRED
+  sku_name            = "${var.sku_tier}_${var.sku_size}"  # REQUIRED
+  tags                = var.tags
 }
+
 
 resource "azurerm_dns_zone" "main" {
   name                = "opsbydesign.ca"
@@ -34,8 +29,6 @@ module "vnet" {
   location            = var.location
   resource_group_name = var.resource_group_name
   address_space       = ["10.0.0.0/16"]
-  tags                = var.tags
-
   subnets = {
     subnet-app = {
       address_prefixes = ["10.0.1.0/24"]
@@ -44,7 +37,6 @@ module "vnet" {
       address_prefixes = ["10.0.2.0/24"]
     }
   }
-
   nsgs = {
     nsg-app = {
       security_rules = [
@@ -60,35 +52,14 @@ module "vnet" {
           destination_address_prefix = "*"
         }
       ]
-    },
-    nsg-db = {
-      security_rules = [
-        {
-          name                       = "Allow_SQL"
-          priority                   = 200
-          direction                  = "Inbound"
-          access                     = "Allow"
-          protocol                   = "Tcp"
-          source_port_range          = "*"
-          destination_port_range     = "1433"
-          source_address_prefix      = "*"
-          destination_address_prefix = "*"
-        }
-      ]
     }
   }
-
   nsg_associations = {
     subnet-app = "nsg-app"
     subnet-db  = "nsg-db"
   }
-}
-
-  nsg_associations = {
-    subnet-app = "nsg-app"
-    subnet-db  = "nsg-db"
-  }
-}
+  tags = var.tags
+} # ← THIS WAS MISSING
 
 module "identity" {
   source              = "../../..//modules/identity"
