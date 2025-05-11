@@ -10,5 +10,5 @@ output "nsg_ids" {
 
 output "nsg_names" {
   description = "Names of all created Network Security Groups"
-  value = keys(azurerm_network_security_group.this)
+  value       = keys(azurerm_network_security_group.this)
 }

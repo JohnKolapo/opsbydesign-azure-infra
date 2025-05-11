@@ -77,21 +77,21 @@ module "vnet" {
   }
 
   resource "azurerm_network_security_rule" "this" {
-  for_each                    = { for rule in each.value : rule.name => rule }
+    for_each = { for rule in each.value : rule.name => rule }
 
-  name                        = each.value.name
-  priority                    = each.value.priority
-  direction                   = each.value.direction
-  access                      = each.value.access
-  protocol                    = each.value.protocol
-  source_port_range           = each.value.source_port_range
-  destination_port_range      = each.value.destination_port_range
-  source_address_prefix       = each.value.source_address_prefix
-  destination_address_prefix  = each.value.destination_address_prefix
+    name                       = each.value.name
+    priority                   = each.value.priority
+    direction                  = each.value.direction
+    access                     = each.value.access
+    protocol                   = each.value.protocol
+    source_port_range          = each.value.source_port_range
+    destination_port_range     = each.value.destination_port_range
+    source_address_prefix      = each.value.source_address_prefix
+    destination_address_prefix = each.value.destination_address_prefix
 
-  network_security_group_name = azurerm_network_security_group.this[each.key].name
-  resource_group_name         = var.resource_group_name
-}
+    network_security_group_name = azurerm_network_security_group.this[each.key].name
+    resource_group_name         = var.resource_group_name
+  }
 
   nsg_associations = {
     subnet-app = "nsg-app"
@@ -128,27 +128,27 @@ module "nsg" {
 }
 
 module "compute_vm" {
-  source                  = "../../../modules/compute"
-  name                    = "dev-winvm-01"
-  location                = var.location
-  resource_group_name     = var.resource_group_name
-  vm_size                 = "Standard_B2s"
-  admin_username          = var.admin_username
-  admin_password          = var.admin_password
-  subnet_id               = module.vnet.subnet_ids["public-subnet"]
+  source                    = "../../../modules/compute"
+  name                      = "dev-winvm-01"
+  location                  = var.location
+  resource_group_name       = var.resource_group_name
+  vm_size                   = "Standard_B2s"
+  admin_username            = var.admin_username
+  admin_password            = var.admin_password
+  subnet_id                 = module.vnet.subnet_ids["public-subnet"]
   user_assigned_identity_id = module.identity.identity_id
-  public_ip               = true
-  tags                    = var.tags
+  public_ip                 = true
+  tags                      = var.tags
 }
 
 module "app_service" {
-  source                  = "../../../modules/app_service"
-  name                    = "webapp-opsbydesign"
-  location                = var.location
-  resource_group_name     = var.resource_group_name
-  sku_tier                = "Basic"
-  sku_size                = "B1"
-  runtime                 = "NODE|18-lts"
+  source                    = "../../../modules/app_service"
+  name                      = "webapp-opsbydesign"
+  location                  = var.location
+  resource_group_name       = var.resource_group_name
+  sku_tier                  = "Basic"
+  sku_size                  = "B1"
+  runtime                   = "NODE|18-lts"
   user_assigned_identity_id = module.identity.identity_id
   app_settings = {
     WEBSITE_RUN_FROM_PACKAGE = "1"

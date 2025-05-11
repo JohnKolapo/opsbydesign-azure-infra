@@ -16,7 +16,7 @@ resource "azurerm_cosmosdb_account" "this" {
     failover_priority = 0
   }
 
-  enable_automatic_failover = true
+  enable_automatic_failover         = true
   is_virtual_network_filter_enabled = false
 
   capabilities {

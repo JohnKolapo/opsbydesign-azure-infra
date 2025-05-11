@@ -47,7 +47,7 @@ resource "azurerm_windows_virtual_machine" "this" {
   }
 
   identity {
-    type = "UserAssigned"
+    type         = "UserAssigned"
     identity_ids = [var.user_assigned_identity_id]
   }
 
