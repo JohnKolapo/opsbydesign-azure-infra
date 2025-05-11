@@ -23,11 +23,10 @@ jobs:
           terraform_version: 1.5.7
 
       - name: Terraform Init
-        run: terraform init
+        run: terraform -chdir=modules/environments/dev init
 
       - name: Terraform Validate
-        run: terraform validate
+        run: terraform -chdir=modules/environments/dev validate
 
       - name: Terraform Plan
-        run: terraform plan -input=false -var-file="terraform.tfvars"
-
+        run: terraform -chdir=modules/environments/dev plan -input=false -var-file="terraform.tfvars"
