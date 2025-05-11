@@ -1,21 +1,36 @@
-name: 'Terraform Deploy'
+name: Terraform Deploy
 
 on:
   push:
     branches:
       - main
+    paths:
+      - '**.tf'
+      - '**.tfvars'
+      - '.github/workflows/terraform.yml'
 
 jobs:
   terraform:
+    name: Terraform
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-      - name: Terraform Init
-        run: terraform init
-        working-directory: ./environments/dev
-      - name: Terraform Validate
-        run: terraform validate
-        working-directory: ./environments/dev
+    defaults:
+      run:
+        working-directory: ./modules/environments/dev
 
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v3
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: 1.8.4
+
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Validate
+      run: terraform validate
+
+    - name: Terraform Plan
+      run: terraform plan -input=false -var-file="terraform.tfvars"
