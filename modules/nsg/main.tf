@@ -8,13 +8,24 @@ resource "azurerm_network_security_group" "this" {
   tags                = var.tags
 }
 
+# Flatten NSG + Rules for valid for_each usage
+locals {
+  nsg_rules_flat = flatten([
+    for nsg_name, nsg in var.nsgs : [
+      for rule in nsg.security_rules : {
+        key       = "${nsg_name}-${rule.name}"
+        nsg_name  = nsg_name
+        rule_data = rule
+      }
+    ]
+  ])
+}
+
 resource "azurerm_network_security_rule" "this" {
   for_each = {
-    for nsg_name, nsg in var.nsgs :
-    for rule in nsg.security_rules :
-    "${nsg_name}-${rule.name}" => {
-      nsg_name  = nsg_name
-      rule_data = rule
+    for r in local.nsg_rules_flat : r.key => {
+      nsg_name  = r.nsg_name
+      rule_data = r.rule_data
     }
   }
 
@@ -27,6 +38,7 @@ resource "azurerm_network_security_rule" "this" {
   destination_port_range      = each.value.rule_data.destination_port_range
   source_address_prefix       = each.value.rule_data.source_address_prefix
   destination_address_prefix  = each.value.rule_data.destination_address_prefix
-  resource_group_name         = var.resource_group_name
+
   network_security_group_name = each.value.nsg_name
+  resource_group_name         = var.resource_group_name
 }
