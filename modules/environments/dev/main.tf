@@ -40,7 +40,9 @@ module "vnet" {
     subnet-app = {
       address_prefixes = ["10.0.1.0/24"]
     }
-    subnet_id = module.vnet.subnet_ids["subnet-app"]
+    subnet-db = {
+      address_prefixes = ["10.0.2.0/24"]
+    }
   }
 
   nsgs = {
@@ -76,22 +78,11 @@ module "vnet" {
     }
   }
 
-  resource "azurerm_network_security_rule" "this" {
-    for_each = { for rule in each.value : rule.name => rule }
-
-    name                       = each.value.name
-    priority                   = each.value.priority
-    direction                  = each.value.direction
-    access                     = each.value.access
-    protocol                   = each.value.protocol
-    source_port_range          = each.value.source_port_range
-    destination_port_range     = each.value.destination_port_range
-    source_address_prefix      = each.value.source_address_prefix
-    destination_address_prefix = each.value.destination_address_prefix
-
-    network_security_group_name = azurerm_network_security_group.this[each.key].name
-    resource_group_name         = var.resource_group_name
+  nsg_associations = {
+    subnet-app = "nsg-app"
+    subnet-db  = "nsg-db"
   }
+}
 
   nsg_associations = {
     subnet-app = "nsg-app"
